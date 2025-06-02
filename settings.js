@@ -259,6 +259,7 @@ export function createSettingsHtml() {
                     <ul>
                         <li>需要在一个文本框中输入完整的 Font Awesome 图标 HTML 代码（fontawesome.com），例如 <code><i class="fa-solid fa-camera"></i></code>。</li>
                         <li>图标的大小和颜色将尽量匹配按钮的样式。</li>
+                        <li>该颜色匹配设置始终启用，无需额外勾选。</li>
                     </ul>
                 </li>
             </ul>
