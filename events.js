@@ -474,7 +474,6 @@ export function setupEventListeners() {
     safeAddListener(Constants.ID_CUSTOM_ICON_URL, 'input', handleSettingsChange);
     safeAddListener(Constants.ID_CUSTOM_ICON_SIZE_INPUT, 'input', handleSettingsChange);
     safeAddListener(Constants.ID_FA_ICON_CODE_INPUT, 'input', handleSettingsChange);
-    safeAddListener(Constants.ID_COLOR_MATCH_CHECKBOX, 'change', handleSettingsChange);
 
     // File upload listener is set up in settings.js -> setupSettingsEventListeners
 

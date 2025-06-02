@@ -21,7 +21,6 @@ export const ID_CUSTOM_ICON_URL = `${EXTENSION_NAME}-custom-icon-url`;
 export const ID_CUSTOM_ICON_SIZE_INPUT = `${EXTENSION_NAME}-custom-icon-size`;
 export const ID_FA_ICON_CODE_INPUT = `${EXTENSION_NAME}-fa-icon-code`;
 // --- 结束新增 ---
-export const ID_COLOR_MATCH_CHECKBOX = `${EXTENSION_NAME}-color-match`;
 
 // --- 新增功能相关ID ---
 export const ID_GLOBAL_ICON_SIZE_INPUT = `${EXTENSION_NAME}-global-icon-size`;

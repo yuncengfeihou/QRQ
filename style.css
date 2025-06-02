@@ -83,20 +83,6 @@ body.qra-disabled #quick-reply-rocket-button {
     max-width: 120px !important;
 }
 
-/* 复选框和标签对齐 */
-.quick-reply-settings-row:has(#quick-reply-menu-color-match-checkbox) { /* 注意 ID 可能根据 constants.js 变化 */
-    display: flex;
-    align-items: center;
-}
-.quick-reply-settings-row:has(#quick-reply-menu-color-match-checkbox) label {
-    min-width: 0;
-    margin: 0;
-    text-align: left; /* 恢复左对齐 */
-}
-#quick-reply-menu-color-match-checkbox { /* 注意 ID 可能根据 constants.js 变化 */
-    margin-right: 5px;
-    vertical-align: middle;
-}
 
 /* --- 自定义图标和 Font Awesome 输入容器 --- */
 .custom-icon-container,
