@@ -18,7 +18,6 @@ export function updateIconDisplay() {
     const customIconSizeSetting = settings.customIconSize || Constants.DEFAULT_CUSTOM_ICON_SIZE; // 自定义图标大小
     const globalIconSizeSetting = settings.globalIconSize; // 全局图标大小 (可能为 null)
     const faIconCode = settings.faIconCode || '';
-    // const matchColors = settings.matchButtonColors !== false; // <--- 移除
 
     // 1. 清除按钮现有内容和样式
     button.innerHTML = '';
@@ -260,9 +259,9 @@ export function createSettingsHtml() {
                     <ul>
                         <li>需要在一个文本框中输入完整的 Font Awesome 图标 HTML 代码（fontawesome.com），例如 <code><i class="fa-solid fa-camera"></i></code>。</li>
                         <li>图标的大小和颜色将尽量匹配按钮的样式。</li>
+                        <li>该颜色匹配设置始终启用，无需额外勾选。</li>
                     </ul>
                 </li>
-                <li>可以勾选"使用与发送按钮相匹配的颜色风格"，让图标颜色自动适配发送按钮的类别（但也有可能匹配不上o(╥﹏╥)o）。</li>
             </ul>
 
 <p><strong>然后，你可以通过点击"菜单样式"按钮，来自定义快速回复菜单的外观：</strong></p>
@@ -516,6 +515,22 @@ export function handleSettingsChange(event) {
             settings.globalIconSize = null; // 如果为空或无效，则设为null以使用默认大小
         } else {
             settings.globalIconSize = parseFloat(sizeVal);
+        }
+    }
+
+    // 如果自定义图标URL或大小被手动修改，检查是否仍与已保存图标匹配
+    if (targetId === Constants.ID_CUSTOM_ICON_URL || targetId === Constants.ID_CUSTOM_ICON_SIZE_INPUT) {
+        const currentUrl = settings.customIconUrl;
+        const currentSize = settings.customIconSize;
+        const isStillSaved = settings.savedCustomIcons && settings.savedCustomIcons.some(
+            icon => icon.url === currentUrl && icon.size === currentSize
+        );
+        if (!isStillSaved) {
+            sharedState.currentSelectedSavedIconId = null;
+            const deleteBtn = document.getElementById(Constants.ID_DELETE_SAVED_ICON_BUTTON);
+            if (deleteBtn) deleteBtn.style.display = 'none';
+            const selectElement = document.getElementById(Constants.ID_CUSTOM_ICON_SELECT);
+            if (selectElement) selectElement.value = "";
         }
     }
 
@@ -988,23 +1003,21 @@ function handleDeleteSavedIcon() {
         return;
     }
 
+    const deletedIcon = settings.savedCustomIcons.find(icon => icon.id === currentId);
     settings.savedCustomIcons = settings.savedCustomIcons.filter(icon => icon.id !== currentId);
     sharedState.currentSelectedSavedIconId = null; // 清除当前选中
 
-    // 清空自定义图标设置区域的当前值 (如果被删除的是当前应用的)
     const customIconUrlInput = document.getElementById(Constants.ID_CUSTOM_ICON_URL);
     const customIconSizeInput = document.getElementById(Constants.ID_CUSTOM_ICON_SIZE_INPUT);
-    const iconTypeDropdown = document.getElementById(Constants.ID_ICON_TYPE_DROPDOWN);
 
-    // 检查当前应用的图标是否就是刚被删除的
-    if (customIconUrlInput.value && settings.savedCustomIcons.every(icon => icon.url !== customIconUrlInput.value)) { // 如果当前URL不在任何保存的图标中
-        customIconUrlInput.value = '';
-        if (customIconUrlInput.dataset.fullValue) delete customIconUrlInput.dataset.fullValue;
-        customIconSizeInput.value = Constants.DEFAULT_CUSTOM_ICON_SIZE;
-        // settings.customIconUrl = ''; // 也更新内存中的settings
-        // settings.customIconSize = Constants.DEFAULT_CUSTOM_ICON_SIZE;
-        // iconTypeDropdown.value = Constants.ICON_TYPES.ROCKET;
-        // settings.iconType = Constants.ICON_TYPES.ROCKET;
+    if (deletedIcon && customIconUrlInput && customIconSizeInput) {
+        const currentUrl = customIconUrlInput.dataset.fullValue || customIconUrlInput.value;
+        const currentSize = parseInt(customIconSizeInput.value, 10) || Constants.DEFAULT_CUSTOM_ICON_SIZE;
+        if (currentUrl === deletedIcon.url && currentSize === deletedIcon.size) {
+            customIconUrlInput.value = '';
+            if (customIconUrlInput.dataset.fullValue) delete customIconUrlInput.dataset.fullValue;
+            customIconSizeInput.value = Constants.DEFAULT_CUSTOM_ICON_SIZE;
+        }
     }
 
     updateCustomIconSelect(); // 刷新下拉列表
